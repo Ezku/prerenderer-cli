@@ -16,9 +16,15 @@ module.exports = async function prerender({
   // File names, in relation to target directory
   routes,
   // 'puppeteer' or 'jsdom'
-  rendererName
+  rendererName,
+  // Renderer options (see https://github.com/Tribex/prerenderer#prerendererrenderer-jsdom-options)
+  rendererOptions
 }) {
-  const prerenderer = makePrerenderer(workingDirectory, sourceDirectory, rendererName);
+  const prerenderer = makePrerenderer(
+    workingDirectory,
+    sourceDirectory,
+    makeRenderer(rendererName, rendererOptions)
+  );
   const writeRenderedOutput = makeRenderedOutputWriter(workingDirectory, targetDirectory);
 
   try {
@@ -37,21 +43,21 @@ function prefixRoutes(routes) {
   return routes.map(route => (route.startsWith('/') ? route : `/${route}`));
 }
 
-function makePrerenderer(workingDirectory, sourceDirectory, rendererName) {
+function makePrerenderer(workingDirectory, sourceDirectory, renderer) {
   return new Prerenderer({
     // Required - The path to the app to prerender. Should have an index.html and any other needed assets.
     staticDir: path.join(workingDirectory, sourceDirectory),
     // The plugin that actually renders the page.
-    renderer: makeRenderer(rendererName)
+    renderer: renderer
   });
 }
 
-function makeRenderer(rendererName) {
+function makeRenderer(rendererName, rendererOptions) {
   switch (rendererName) {
     case 'puppeteer':
-      return new PuppeteerRenderer();
+      return new PuppeteerRenderer(rendererOptions);
     case 'jsdom':
-      return new JSDOMRenderer();
+      return new JSDOMRenderer(rendererOptions);
     default:
       throw new Error(`Unknown renderer name '${rendererName}'`);
   }
