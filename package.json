@@ -1,0 +1,20 @@
+{
+  "name": "prerenderer-cli",
+  "version": "0.0.0",
+  "description": "CLI frontend for @prerenderer/prerenderer",
+  "main": "index.js",
+  "repository": "git@github.com:Ezku/prerenderer-cli.git",
+  "author": "Eevert Saukkokoski <eevert.saukkokoski@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "prerender": "bin/prerender.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "dependencies": {
+    "@prerenderer/prerenderer": "^0.7.2",
+    "@prerenderer/renderer-jsdom": "^0.2.0",
+    "minimist": "^1.2.0"
+  }
+}
