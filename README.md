@@ -4,5 +4,5 @@ Usage:
 
 ```
 yarn global add prerenderer-cli
-prerender --source=dist --target=prerendered index.html
+prerender --renderer=puppeteer --source=dist --target=prerendered index.html
 ```

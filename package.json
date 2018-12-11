@@ -15,6 +15,7 @@
   "dependencies": {
     "@prerenderer/prerenderer": "^0.7.2",
     "@prerenderer/renderer-jsdom": "^0.2.0",
+    "@prerenderer/renderer-puppeteer": "^0.2.0",
     "minimist": "^1.2.0"
   }
 }

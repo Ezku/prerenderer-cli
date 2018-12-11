@@ -7,5 +7,6 @@ prerender({
   workingDirectory: process.cwd(),
   sourceDirectory: args.source || '.',
   targetDirectory: args.target || 'prerender',
-  routes: args._
+  routes: args._,
+  rendererName: args.renderer || 'jsdom'
 }).catch(e => console.error(e));

@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const Prerenderer = require('@prerenderer/prerenderer');
+
+const PuppeteerRenderer = require('@prerenderer/renderer-puppeteer');
 const JSDOMRenderer = require('@prerenderer/renderer-jsdom');
 
 module.exports = async function prerender({
@@ -12,9 +14,11 @@ module.exports = async function prerender({
   // Target directory for prerendered files, in relation to working directory
   targetDirectory,
   // File names, in relation to target directory
-  routes
+  routes,
+  // 'puppeteer' or 'jsdom'
+  rendererName
 }) {
-  const prerenderer = makePrerenderer(workingDirectory, sourceDirectory);
+  const prerenderer = makePrerenderer(workingDirectory, sourceDirectory, rendererName);
   const writeRenderedOutput = makeRenderedOutputWriter(workingDirectory, targetDirectory);
 
   try {
@@ -33,13 +37,24 @@ function prefixRoutes(routes) {
   return routes.map(route => (route.startsWith('/') ? route : `/${route}`));
 }
 
-function makePrerenderer(workingDirectory, sourceDirectory) {
+function makePrerenderer(workingDirectory, sourceDirectory, rendererName) {
   return new Prerenderer({
     // Required - The path to the app to prerender. Should have an index.html and any other needed assets.
     staticDir: path.join(workingDirectory, sourceDirectory),
     // The plugin that actually renders the page.
-    renderer: new JSDOMRenderer()
+    renderer: makeRenderer(rendererName)
   });
+}
+
+function makeRenderer(rendererName) {
+  switch (rendererName) {
+    case 'puppeteer':
+      return new PuppeteerRenderer();
+    case 'jsdom':
+      return new JSDOMRenderer();
+    default:
+      throw new Error(`Unknown renderer name '${rendererName}'`);
+  }
 }
 
 function makeRenderedOutputWriter(workingDirectory, targetDirectory) {
