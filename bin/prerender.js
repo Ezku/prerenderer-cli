@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const prerender = require('../index');
 
 const args = require('minimist')(process.argv.slice(2));
